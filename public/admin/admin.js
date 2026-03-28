@@ -27,8 +27,13 @@ async function api(method, path, body) {
     if (token) opts.headers['Authorization'] = `Bearer ${token}`;
     if (body)  opts.body = JSON.stringify(body);
 
-    const res  = await fetch(path, opts);
-    const data = await res.json();
+    const res = await fetch(path, opts);
+    let data;
+    try {
+        data = await res.json();
+    } catch {
+        data = { error: `Error del servidor (${res.status})` };
+    }
     return { ok: res.ok, status: res.status, data };
 }
 
@@ -55,7 +60,12 @@ function initSetupForm() {
         const { ok, data } = await api('POST', '/api/admin/setup', { username, password });
 
         if (ok) {
-            await doLogin(username, password);
+            const loginOk = await doLogin(username, password);
+            if (!loginOk) {
+                // Setup succeeded but auto-login failed — redirect to login view
+                showView('login');
+                showErr('login-error', 'Cuenta creada. Ingresá con tu usuario y contraseña.');
+            }
         } else {
             showErr('setup-error', data.error || 'Error al crear el usuario.');
             btn.disabled = false;
@@ -85,7 +95,7 @@ function initLoginForm() {
     });
 }
 
-async function doLogin(username, password) {
+async function doLogin(username, password, showLoginErr = true) {
     const { ok, data } = await api('POST', '/api/admin/login', { username, password });
     if (ok) {
         token = data.token;
@@ -93,7 +103,7 @@ async function doLogin(username, password) {
         await loadDashboard();
         return true;
     } else {
-        showErr('login-error', 'Usuario o contraseña incorrectos.');
+        if (showLoginErr) showErr('login-error', 'Usuario o contraseña incorrectos.');
         return false;
     }
 }
