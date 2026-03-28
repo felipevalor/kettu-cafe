@@ -13,6 +13,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 1.2 Sticky Mobile CTA — UX-FIX-1.2
+    const stickyCta = document.getElementById('sticky-cta');
+    const heroSection = document.getElementById('home');
+    const contactSection = document.getElementById('contact');
+
+    if (stickyCta && heroSection) {
+        const updateStickyCta = () => {
+            const heroBottom = heroSection.getBoundingClientRect().bottom;
+            const contactTop = contactSection ? contactSection.getBoundingClientRect().top : Infinity;
+            const windowHeight = window.innerHeight;
+
+            // Show after scrolling past hero, hide when contact section is in view
+            const shouldShow = heroBottom < 0 && contactTop > windowHeight * 0.5;
+            stickyCta.classList.toggle('visible', shouldShow);
+            stickyCta.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        };
+
+        window.addEventListener('scroll', updateStickyCta, { passive: true });
+        updateStickyCta(); // run on load
+    }
+
+    // 1.1 Mobile Menu Toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinksContainer = document.querySelector('.nav-links');
+    const navLinksList = document.querySelectorAll('.nav-links a');
+
+    if (menuToggle && navLinksContainer) {
+        menuToggle.addEventListener('click', () => {
+            const isOpen = menuToggle.classList.toggle('active');
+            navLinksContainer.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+            menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        navLinksList.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinksContainer.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            });
+        });
+    }
+
     // 2. Menu Tabs Logic
     const tabBtns = document.querySelectorAll('.tab-btn');
     const menuGrids = document.querySelectorAll('.menu-grid');
@@ -21,9 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             const targetTab = btn.getAttribute('data-tab');
 
-            // Toggle active button
-            tabBtns.forEach(b => b.classList.remove('active'));
+            // Toggle active button + aria-selected (UI-PLAN-1.2 WCAG)
+            tabBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
             btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
 
             // Toggle active grid
             menuGrids.forEach(grid => {
@@ -36,56 +83,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3. Contact Form Submission
-    const contactForm = document.getElementById('contact-form');
-    const formResponse = document.getElementById('form-response');
-
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Get form data
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            message: document.getElementById('message').value
-        };
-
-        // UI feedback
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.textContent;
-        submitBtn.textContent = 'Enviando...';
-        submitBtn.disabled = true;
-
-        try {
-            // Note: In local development, you might need to run wrangler dev for the worker
-            // and maybe point to http://localhost:8787/api/contact if not using Pages Functions
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
+    // 3. Scroll-reveal for gallery items, product cards, and contact section (UI-ITEM-1.2)
+    const revealEls = document.querySelectorAll('.gallery-item, .product-card, .contact-info, .contact-photo');
+    if ('IntersectionObserver' in window) {
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
             });
-
-            const result = await response.json();
-
-            if (response.ok && result.success) {
-                formResponse.textContent = '¡Gracias por tu mensaje! Nos pondremos en contacto pronto.';
-                formResponse.classList.add('success');
-                contactForm.reset();
-            } else {
-                throw new Error(result.error || 'Error al enviar el mensaje');
-            }
-        } catch (error) {
-            console.error('Submission error:', error);
-            formResponse.textContent = 'Hubo un error al enviar el mensaje. Por favor, intentá de nuevo o contactanos por Instagram.';
-            formResponse.style.display = 'block';
-            formResponse.style.color = '#ff6b6b';
-        } finally {
-            submitBtn.textContent = originalBtnText;
-            submitBtn.disabled = false;
-        }
-    });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => revealObserver.observe(el));
+    } else {
+        revealEls.forEach(el => el.classList.add('revealed'));
+    }
 
     // 4. Smooth Scroll for all anchors
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

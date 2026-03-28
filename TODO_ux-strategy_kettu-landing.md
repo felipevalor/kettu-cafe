@@ -17,12 +17,12 @@
 ### 3. Actionable Improvements (Trackable Tasks)
 
 **🟢 High Impact / Low Effort (Quick Wins)**
-- [ ] **UX-FIX-1.1 [Copy]**: Use "Ver la Carta de Hoy" (Check Today's Menu) instead of just "Menú" to create a sense of freshness and daily artisan work.
-- [ ] **UX-FIX-1.2 [Hierarchy]**: Keep the "Hacer Pedido" button sticky on mobile for immediate conversion.
+- [x] **UX-FIX-1.1 [Copy]**: Use "Ver la Carta de Hoy" (Check Today's Menu) instead of just "Menú" to create a sense of freshness and daily artisan work.
+- [x] **UX-FIX-1.2 [Hierarchy]**: Keep the "Hacer Pedido" button sticky on mobile for immediate conversion.
 
 **🟡 Medium to High Impact / Medium Effort (Structural Changes)**
-- [ ] **UX-NEW-1.1 [Trust Elements]**: Add the "Barrio Martin" mention prominently to anchor the brand to its physical community.
-- [ ] **UX-NEW-1.2 [Menu Flow]**: Implement a tabbed interface for categories to reduce vertical scroll fatigue.
+- [x] **UX-NEW-1.1 [Trust Elements]**: Add the "Barrio Martin" mention prominently to anchor the brand to its physical community.
+- [x] **UX-NEW-1.2 [Menu Flow]**: Implement a tabbed interface for categories to reduce vertical scroll fatigue.
 
 **🔴 Strategic Overhauls (Long-term)**
 - [ ] **UX-STRAT-1.1 [Architecture]**: Future integration with an online payment/ordering system once the artisan throughput allows.
