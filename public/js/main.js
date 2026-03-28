@@ -3,6 +3,48 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 0. Load menu items dynamically from API
+    const CATEGORY_TO_GRID = { cafe: 'coffee', pastry: 'pastry', brunch: 'brunch' };
+
+    async function loadMenu() {
+        try {
+            const res = await fetch('/api/menu');
+            if (!res.ok) return;
+            const { items } = await res.json();
+
+            items.forEach(item => {
+                const gridId = CATEGORY_TO_GRID[item.category];
+                const grid = document.getElementById(gridId);
+                if (!grid) return;
+
+                const card = document.createElement('div');
+                card.className = 'product-card revealed';
+                card.innerHTML = `
+                    ${item.image_url ? `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.title)}" loading="lazy">` : ''}
+                    <div class="product-info">
+                        <h3>${escapeHtml(item.title)}</h3>
+                        ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
+                        <span class="price">${escapeHtml(item.price)}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        } catch (e) {
+            console.error('Failed to load menu:', e);
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    loadMenu();
+
     // 1. Header Scroll Effect
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
