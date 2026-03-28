@@ -13,6 +13,7 @@
     --danger-hover: #e74c3c;
     --radius:    8px;
     --font:      'Outfit', sans-serif;
+    --font-display: 'Playfair Display', serif;
 }
 
 /* ── Reset ──────────────────────────────────────────────────── */
@@ -74,8 +75,9 @@ body {
 }
 
 .auth-title {
-    font-size: 22px;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
     text-align: center;
     margin-bottom: 4px;
 }
@@ -236,10 +238,10 @@ select option { background: var(--surface-2); }
 }
 
 .admin-logo span {
-    font-weight: 600;
-    font-size: 17px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
     color: var(--text);
-    letter-spacing: -0.01em;
 }
 
 .admin-header-actions {
@@ -325,8 +327,9 @@ select option { background: var(--surface-2); }
 }
 
 .item-card-title {
-    font-size: 14px;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
     margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -395,8 +398,9 @@ select option { background: var(--surface-2); }
 }
 
 .modal-header h2 {
-    font-size: 16px;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
 }
 
 .modal-close {
@@ -523,12 +527,25 @@ select option { background: var(--surface-2); }
     font-size: 12px;
 }
 
-.admin-footer-credit a {
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
+.admin-footer-credit {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
-.admin-footer-credit a:hover { color: var(--text); }
+
+.vs-credit {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.vs-logo {
+    width: 110px;
+    height: auto;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+.vs-credit:hover .vs-logo { opacity: 1; }
 
 /* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 600px) {
