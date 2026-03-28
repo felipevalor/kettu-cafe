@@ -13,26 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 1.2 Sticky Mobile CTA — UX-FIX-1.2
-    const stickyCta = document.getElementById('sticky-cta');
-    const heroSection = document.getElementById('home');
-    const contactSection = document.getElementById('contact');
 
-    if (stickyCta && heroSection) {
-        const updateStickyCta = () => {
-            const heroBottom = heroSection.getBoundingClientRect().bottom;
-            const contactTop = contactSection ? contactSection.getBoundingClientRect().top : Infinity;
-            const windowHeight = window.innerHeight;
-
-            // Show after scrolling past hero, hide when contact section is in view
-            const shouldShow = heroBottom < 0 && contactTop > windowHeight * 0.5;
-            stickyCta.classList.toggle('visible', shouldShow);
-            stickyCta.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
-        };
-
-        window.addEventListener('scroll', updateStickyCta, { passive: true });
-        updateStickyCta(); // run on load
-    }
 
     // 1.1 Mobile Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -104,10 +85,26 @@ document.addEventListener('DOMContentLoaded', () => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
+            
+            if (targetId === '#') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                return;
+            }
             
             const targetElem = document.querySelector(targetId);
             if (targetElem) {
+                // If it's the home section, scroll to absolute top
+                if (targetId === '#home') {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
                 const headerOffset = 90;
                 const elementPosition = targetElem.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
