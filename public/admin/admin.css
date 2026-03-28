@@ -420,6 +420,90 @@ select option { background: var(--surface-2); }
     margin-top: 20px;
 }
 
+/* ── Image preview ───────────────────────────────────────────── */
+.img-preview-wrap {
+    margin-top: 8px;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+}
+
+.img-preview {
+    width: 100%;
+    max-height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Confirm dialog ──────────────────────────────────────────── */
+.confirm-card {
+    max-width: 340px;
+    padding: 24px;
+}
+
+.confirm-message {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--text);
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.confirm-actions .btn-danger {
+    padding: 8px 20px;
+    font-size: 13px;
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+}
+.confirm-actions .btn-danger:hover { background: var(--danger-hover); border-color: var(--danger-hover); }
+
+/* ── Toast notifications ─────────────────────────────────────── */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 200;
+}
+
+.toast {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    animation: toast-in 0.2s ease;
+    min-width: 220px;
+}
+
+.toast--success { border-left: 3px solid #6db96d; }
+.toast--error   { border-left: 3px solid var(--danger); }
+
+.toast-out { animation: toast-out 0.2s ease forwards; }
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(8px); }
+}
+
 /* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 600px) {
     .admin-header-inner { flex-direction: column; align-items: flex-start; gap: 8px; }

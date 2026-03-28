@@ -110,6 +110,9 @@
             <input type="url" id="item-image" placeholder="https://...">
             <p class="field-hint">Pegá un link de Google Drive o cualquier URL directa de imagen.</p>
             <p id="img-drive-hint" class="field-hint field-hint--success hidden">Link de Drive convertido ✓</p>
+            <div id="img-preview-wrap" class="img-preview-wrap hidden">
+                <img id="img-preview" class="img-preview" src="" alt="Preview">
+            </div>
 
             <div class="modal-actions">
                 <button type="submit" class="btn-primary" id="btn-save">💾 Guardar</button>
@@ -119,6 +122,20 @@
         </form>
     </div>
 </div>
+
+<!-- ── Confirm dialog ── -->
+<div id="confirm-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card confirm-card">
+        <p id="confirm-message" class="confirm-message"></p>
+        <div class="confirm-actions">
+            <button class="btn-danger btn-confirm-ok" id="btn-confirm-ok">Borrar</button>
+            <button class="btn-ghost" id="btn-confirm-cancel">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Toast container ── -->
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
 
 <script src="admin.js"></script>
 </body>

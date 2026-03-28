@@ -206,13 +206,16 @@ function initCardActions() {
         }
 
         if (action === 'delete' && item) {
-            const confirmed = confirm(`¿Borrar "${item.title}"? Esta acción no se puede deshacer.`);
+            const confirmed = await showConfirm(`¿Borrar "${item.title}"? Esta acción no se puede deshacer.`);
             if (!confirmed) return;
 
             const { ok } = await api('DELETE', `/api/admin/items/${id}`);
             if (ok) {
                 allItems = allItems.filter(i => i.id !== id);
                 renderTab(currentTab);
+                showToast(`"${item.title}" eliminado`);
+            } else {
+                showToast('Error al eliminar el item', 'error');
             }
         }
     });
@@ -231,6 +234,7 @@ function openModal(item = null) {
         $('item-description').value     = item.description || '';
         $('item-price').value           = item.price;
         $('item-image').value           = item.image_url || '';
+        updateImagePreview(item.image_url || '');
     } else {
         $('modal-title').textContent    = 'Nuevo item';
         $('item-id').value              = '';
@@ -239,8 +243,10 @@ function openModal(item = null) {
         $('item-description').value     = '';
         $('item-price').value           = '';
         $('item-image').value           = '';
+        updateImagePreview('');
     }
 
+    $('img-drive-hint').classList.add('hidden');
     show('modal-overlay');
     $('item-title').focus();
 }
@@ -291,15 +297,68 @@ function initModal() {
         btn.textContent = '💾 Guardar';
 
         if (res.ok) {
+            const isEdit = !!id;
             closeModal();
             await loadDashboard();
+            showToast(isEdit ? 'Item actualizado' : 'Item creado');
         } else {
             showErr('modal-error', res.data.error || 'Error al guardar el item.');
         }
     });
 }
 
-// ── Google Drive URL converter ────────────────────────────────────────────────
+// ── Toast notifications ───────────────────────────────────────────────────────
+
+function showToast(message, type = 'success') {
+    const container = $('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast--${type}`;
+    toast.textContent = type === 'success' ? `✓ ${message}` : `✕ ${message}`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.classList.add('toast-out');
+        toast.addEventListener('animationend', () => toast.remove());
+    }, 3000);
+}
+
+// ── Custom confirm dialog ─────────────────────────────────────────────────────
+
+function showConfirm(message) {
+    return new Promise((resolve) => {
+        $('confirm-message').textContent = message;
+        show('confirm-overlay');
+
+        function onOk()     { cleanup(); resolve(true);  }
+        function onCancel() { cleanup(); resolve(false); }
+        function onKey(e)   { if (e.key === 'Escape') { cleanup(); resolve(false); } }
+
+        function cleanup() {
+            hide('confirm-overlay');
+            $('btn-confirm-ok').removeEventListener('click', onOk);
+            $('btn-confirm-cancel').removeEventListener('click', onCancel);
+            document.removeEventListener('keydown', onKey);
+        }
+
+        $('btn-confirm-ok').addEventListener('click', onOk);
+        $('btn-confirm-cancel').addEventListener('click', onCancel);
+        document.addEventListener('keydown', onKey);
+    });
+}
+
+// ── Google Drive URL converter + image preview ────────────────────────────────
+
+function updateImagePreview(url) {
+    const preview = $('img-preview');
+    const wrap    = $('img-preview-wrap');
+    if (url) {
+        preview.src = url;
+        preview.onload  = () => show('img-preview-wrap');
+        preview.onerror = () => hide('img-preview-wrap');
+    } else {
+        hide('img-preview-wrap');
+        preview.src = '';
+    }
+}
 
 function initDriveConverter() {
     const input = $('item-image');
@@ -313,6 +372,7 @@ function initDriveConverter() {
         } else {
             hint.classList.add('hidden');
         }
+        updateImagePreview(input.value.trim());
     });
 }
 
