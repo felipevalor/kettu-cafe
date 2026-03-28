@@ -1,0 +1,14 @@
+name = "kettu-cafe"
+pages_build_output_dir = "public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kettu-cafe-db"
+database_id = "4c2a84e3-8c46-4a0d-99a7-1227629d0194"
+migrations_dir = "migrations"
+
+[vars]
+ENVIRONMENT = "production"
+
+[observability]
+enabled = true
