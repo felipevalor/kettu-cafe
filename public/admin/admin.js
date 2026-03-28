@@ -299,6 +299,23 @@ function initModal() {
     });
 }
 
+// ── Google Drive URL converter ────────────────────────────────────────────────
+
+function initDriveConverter() {
+    const input = $('item-image');
+    const hint  = $('img-drive-hint');
+
+    input.addEventListener('input', () => {
+        const match = input.value.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (match) {
+            input.value = `https://lh3.googleusercontent.com/d/${match[1]}`;
+            hint.classList.remove('hidden');
+        } else {
+            hint.classList.add('hidden');
+        }
+    });
+}
+
 // ── XSS protection ────────────────────────────────────────────────────────────
 
 function escapeHtml(str) {
@@ -319,6 +336,7 @@ async function init() {
     initTabs();
     initCardActions();
     initModal();
+    initDriveConverter();
 
     const { data } = await api('GET', '/api/admin/check');
 

@@ -135,6 +135,10 @@ select option { background: var(--surface-2); }
     margin-top: 4px;
 }
 
+.field-hint--success {
+    color: #6db96d;
+}
+
 /* ── Buttons ────────────────────────────────────────────────── */
 .btn-primary {
     background: var(--green);
