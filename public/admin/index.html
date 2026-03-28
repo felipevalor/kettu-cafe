@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Kettu Café</title>
+    <link rel="icon" type="image/svg+xml" href="../img/logo-kettu.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ── View: Setup (first-run) ── -->
+<div id="view-setup" class="view hidden">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <img src="../img/logo-kettu.svg" alt="Kettu Café">
+        </div>
+        <h1 class="auth-title">Configuración inicial</h1>
+        <p class="auth-subtitle">Creá tu usuario administrador</p>
+        <form id="form-setup" autocomplete="off">
+            <label for="setup-username">Usuario</label>
+            <input type="text" id="setup-username" placeholder="admin" autocomplete="username" required>
+            <label for="setup-password">Contraseña <span class="hint">(mín. 8 caracteres)</span></label>
+            <input type="password" id="setup-password" placeholder="••••••••" autocomplete="new-password" required minlength="8">
+            <button type="submit" class="btn-primary" id="btn-setup">Crear cuenta</button>
+            <p id="setup-error" class="error-msg hidden"></p>
+        </form>
+    </div>
+</div>
+
+<!-- ── View: Login ── -->
+<div id="view-login" class="view hidden">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <img src="../img/logo-kettu.svg" alt="Kettu Café">
+        </div>
+        <h1 class="auth-title">Bienvenido</h1>
+        <p class="auth-subtitle">Ingresá a tu panel</p>
+        <form id="form-login" autocomplete="on">
+            <label for="login-username">Usuario</label>
+            <input type="text" id="login-username" placeholder="admin" autocomplete="username" required>
+            <label for="login-password">Contraseña</label>
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="submit" class="btn-primary" id="btn-login">Entrar</button>
+            <p id="login-error" class="error-msg hidden"></p>
+        </form>
+    </div>
+</div>
+
+<!-- ── View: Dashboard ── -->
+<div id="view-dashboard" class="view hidden">
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div class="admin-logo">
+                <img src="../img/logo-kettu.svg" alt="Kettu Café">
+                <span>Nuestra Propuesta</span>
+            </div>
+            <div class="admin-header-actions">
+                <button class="btn-primary" id="btn-new">+ Agregar item</button>
+                <button class="btn-ghost" id="btn-logout">Salir</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="cafe"   role="tab" aria-selected="true">☕ Café</button>
+            <button class="tab"        data-tab="pastry" role="tab" aria-selected="false">🥐 Pastelería</button>
+            <button class="tab"        data-tab="brunch" role="tab" aria-selected="false">🍳 Brunch</button>
+        </div>
+
+        <div id="admin-grid" class="admin-grid">
+            <!-- Cards rendered by admin.js -->
+        </div>
+
+        <p id="grid-empty" class="empty-state hidden">
+            No hay items en esta categoría.<br>Hacé clic en "+ Agregar item" para crear uno.
+        </p>
+    </main>
+</div>
+
+<!-- ── Modal: Edit / Create ── -->
+<div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2 id="modal-title">Nuevo item</h2>
+            <button class="modal-close" id="btn-modal-close" aria-label="Cerrar">✕</button>
+        </div>
+        <form id="form-item" autocomplete="off">
+            <input type="hidden" id="item-id">
+
+            <label for="item-category">Categoría</label>
+            <select id="item-category" required>
+                <option value="cafe">☕ Café</option>
+                <option value="pastry">🥐 Pastelería</option>
+                <option value="brunch">🍳 Brunch</option>
+            </select>
+
+            <label for="item-title">Nombre del producto</label>
+            <input type="text" id="item-title" placeholder="Flat White" required>
+
+            <label for="item-description">Descripción</label>
+            <textarea id="item-description" placeholder="Doble shot de espresso..." rows="3"></textarea>
+
+            <label for="item-price">Precio</label>
+            <input type="text" id="item-price" placeholder="$3200" required>
+
+            <label for="item-image">URL de la foto</label>
+            <input type="url" id="item-image" placeholder="https://...">
+            <p class="field-hint">Pegá un link directo a la imagen (Google Drive, Imgur, etc.)</p>
+
+            <div class="modal-actions">
+                <button type="submit" class="btn-primary" id="btn-save">💾 Guardar</button>
+                <button type="button" class="btn-ghost" id="btn-cancel">Cancelar</button>
+            </div>
+            <p id="modal-error" class="error-msg hidden"></p>
+        </form>
+    </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
